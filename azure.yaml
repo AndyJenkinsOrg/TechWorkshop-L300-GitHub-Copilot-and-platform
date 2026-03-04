@@ -1,0 +1,55 @@
+name: zavastorefront
+metadata:
+  description: ZavaStorefront - E-commerce web application with AI capabilities
+  author: GitHub Copilot
+  version: "1.0.0"
+
+env:
+  # Azure environment configuration
+  AZURE_LOCATION: swedencentral
+  AZURE_SUBSCRIPTION_ID: 7d06c802-7121-4c24-a98c-4cda4941551a
+  AZURE_RESOURCE_GROUP: rg-zavasf-dev-swedencentral
+  AZURE_ENV_NAME: dev
+
+# Service configurations
+services:
+  # Web application service
+  web:
+    project: src
+    docker:
+      context: .
+      dockerfile: Dockerfile
+    # Map to App Service container deployment
+    host: appservice
+    module: modules/app-service
+
+# Infrastructure configuration  
+infra:
+  path: infra
+  module: main
+
+# AZD pipeline hooks
+hooks:
+  # Pre-provision hook - not needed for Bicep
+  # provision:
+  #   shell: sh
+  #   run: echo "Provisioning..."
+
+  # Pre-deploy hook - build and push container image to ACR
+  predeploy:
+    shell: sh
+    run: |
+      echo "Building and pushing container image to ACR..."
+      # Note: ACR build can be triggered via Azure Portal or Azure CLI
+      # az acr build --registry {{ AZURE_CONTAINER_REGISTRY_NAME }} --image zavastorefront:latest .
+
+# Output configuration
+outputs:
+  AZURE_APP_SERVICE_URL:
+    description: Application Service URL
+  AZURE_CONTAINER_REGISTRY_NAME:
+    description: Container Registry name
+  AZURE_CONTAINER_REGISTRY_ENDPOINT:
+    description: Container Registry endpoint
+  APPLICATIONINSIGHTS_CONNECTION_STRING:
+    description: Application Insights connection string
