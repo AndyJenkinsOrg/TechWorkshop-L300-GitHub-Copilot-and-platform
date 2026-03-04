@@ -2,7 +2,7 @@ param location string
 param environment string
 param acrName string = 'acrzavasf${environment}${replace(location, 'us', '')}'
 
-var acrSku = 'Premium'
+var acrSku = 'Standard'
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   name: acrName
@@ -17,14 +17,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' =
     policies: {
       quarantinePolicy: {
         status: 'disabled'
-      }
-      trustPolicy: {
-        type: 'Notary'
-        status: 'disabled'
-      }
-      retentionPolicy: {
-        days: 30
-        status: 'enabled'
       }
     }
   }
