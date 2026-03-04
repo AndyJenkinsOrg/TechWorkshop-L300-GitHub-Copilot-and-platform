@@ -42,6 +42,8 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
   properties: {
     serverFarmId: appServicePlan.id
     siteConfig: {
+      acrUseManagedIdentityCreds: true
+      acrUserManagedIdentityID: managedIdentityClientId
       linuxFxVersion: 'DOCKER|${containerRegistryLoginServer}/zavastorefront:latest'
       alwaysOn: environment == 'dev' ? false : true
       http20Enabled: true
