@@ -2,7 +2,7 @@ param location string
 param environment string
 param acrName string = 'acrzavasf${environment}${replace(location, 'us', '')}'
 
-var acrSku = 'Basic'
+var acrSku = 'Premium'
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   name: acrName

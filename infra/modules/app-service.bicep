@@ -106,7 +106,7 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
 resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(appService.id, 'acrpull')
   properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4694-a41a-89b953d4fb01') // AcrPull role
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role
     principalId: reference(managedIdentityId, '2023-01-31').principalId
     principalType: 'ServicePrincipal'
   }
