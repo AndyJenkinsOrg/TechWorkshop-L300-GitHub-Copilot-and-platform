@@ -93,6 +93,10 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
           name: 'AZURE_CLIENT_ID'
           value: managedIdentityClientId
         }
+        {
+          name: 'ASPNETCORE_ENVIRONMENT'
+          value: environment == 'dev' ? 'Development' : 'Production'
+        }
       ]
       connectionStrings: []
     }
