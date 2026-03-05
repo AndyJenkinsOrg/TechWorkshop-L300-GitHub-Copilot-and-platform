@@ -16,7 +16,7 @@ public class ChatService
 
         var endpoint = configuration["AIServices:Endpoint"]
             ?? throw new InvalidOperationException("Missing required configuration 'AIServices:Endpoint'.");
-        var deploymentName = configuration["AIServices:DeploymentName"] ?? "gpt-4o";
+        var deploymentName = configuration["AIServices:DeploymentName"] ?? "Phi-4";
         var managedIdentityClientId = configuration["AZURE_CLIENT_ID"];
 
         // Use ManagedIdentityCredential with explicit client ID for user-assigned identity,
@@ -56,7 +56,7 @@ public class ChatService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error communicating with AI endpoint");
-            return $"Error: {ex.GetType().Name}: {ex.Message}";
+            return "Sorry, I'm unable to respond right now. Please try again later.";
         }
     }
 }
