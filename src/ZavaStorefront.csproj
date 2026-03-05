@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <!-- Application Insights for monitoring and telemetry -->
+    <PackageReference Include="Azure.AI.ContentSafety" Version="1.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.4" />
     
     <!-- Redis Cache for distributed session state -->
