@@ -46,7 +46,7 @@ public class ChatService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error communicating with AI endpoint");
-            return "Sorry, I'm unable to respond right now. Please try again later.";
+            return $"Error: {ex.GetType().Name}: {ex.Message}";
         }
     }
 }
