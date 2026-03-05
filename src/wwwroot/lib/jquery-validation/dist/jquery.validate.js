@@ -683,8 +683,30 @@ $.extend( $.validator, {
 			} );
 		},
 
+		// Normalize various selector-like inputs into a single DOM element.
+		// Only DOM elements & jQuery objects are accepted; other inputs
+		// (including strings) result in undefined.
+		_safeElement: function( selector ) {
+			if ( !selector ) {
+				return undefined;
+			}
+
+			// jQuery object: return first DOM element if present
+			if ( selector.jquery ) {
+				return selector[ 0 ];
+			}
+
+			// DOM element: return as-is
+			if ( selector.nodeType ) {
+				return selector;
+			}
+
+			// Any other type (e.g., string) is not accepted here
+			return undefined;
+		},
+
 		clean: function( selector ) {
-			return $( selector )[ 0 ];
+			return this._safeElement( selector );
 		},
 
 		errors: function() {
@@ -1063,9 +1085,16 @@ $.extend( $.validator, {
 
 		validationTargetFor: function( element ) {
 
+			// Normalize the initial element
+			element = this._safeElement( element );
+
 			// If radio/checkbox, validate first element in group instead
-			if ( this.checkable( element ) ) {
-				element = this.findByName( element.name );
+			if ( element && this.checkable( element ) ) {
+				element = this._safeElement( this.findByName( element.name ) );
+			}
+
+			if ( !element ) {
+				return undefined;
 			}
 
 			// Always apply ignore filter
