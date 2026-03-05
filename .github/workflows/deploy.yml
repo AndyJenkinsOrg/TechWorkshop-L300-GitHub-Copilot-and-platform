@@ -1,0 +1,43 @@
+name: Build and Deploy to Azure App Service
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  IMAGE_NAME: zavastorefront
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Login to ACR
+        run: az acr login --name ${{ vars.ACR_NAME }}
+
+      - name: Build and push container image
+        run: |
+          IMAGE_TAG=${{ vars.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
+          docker build -t ${IMAGE_TAG}:latest -t ${IMAGE_TAG}:${{ github.sha }} .
+          docker push ${IMAGE_TAG}:latest
+          docker push ${IMAGE_TAG}:${{ github.sha }}
+
+      - name: Restart App Service
+        run: az webapp restart --name ${{ vars.APP_SERVICE_NAME }} --resource-group ${{ vars.RESOURCE_GROUP }}
