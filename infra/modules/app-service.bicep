@@ -6,6 +6,7 @@ param redisCacheHostname string
 param redisCachePort int
 param managedIdentityClientId string
 param managedIdentityId string
+param aiServicesEndpoint string
 
 var appServicePlanName = 'plan-zavasf-${environment}-${location}'
 var appServiceName = 'app-zavasf-${environment}-${location}'
@@ -96,6 +97,14 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
         {
           name: 'ASPNETCORE_ENVIRONMENT'
           value: environment == 'dev' ? 'Development' : 'Production'
+        }
+        {
+          name: 'AIServices__Endpoint'
+          value: aiServicesEndpoint
+        }
+        {
+          name: 'AIServices__DeploymentName'
+          value: 'Phi-4'
         }
       ]
       connectionStrings: []

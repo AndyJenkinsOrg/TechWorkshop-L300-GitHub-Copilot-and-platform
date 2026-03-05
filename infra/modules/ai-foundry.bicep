@@ -42,6 +42,26 @@ resource gpt4oDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-
   }
 }
 
+// Phi-4 Model Deployment
+resource phi4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
+  parent: aiServices
+  name: 'Phi-4'
+  sku: {
+    name: 'GlobalStandard'
+    capacity: 1
+  }
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: 'Phi-4'
+      version: '2'
+    }
+  }
+  dependsOn: [
+    gpt4oDeployment
+  ]
+}
+
 output aiServicesId string = aiServices.id
 output aiServicesName string = aiServices.name
 output aiServicesEndpoint string = aiServices.properties.endpoint

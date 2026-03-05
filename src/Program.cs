@@ -63,6 +63,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CartService>();
+builder.Services.AddSingleton<ChatService>();
 
 // Add health checks
 builder.Services.AddHealthChecks();

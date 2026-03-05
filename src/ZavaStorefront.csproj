@@ -12,6 +12,10 @@
     
     <!-- Redis Cache for distributed session state -->
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0" />
+    
+    <!-- Azure AI OpenAI for chat functionality -->
+    <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
+    <PackageReference Include="Azure.Identity" Version="1.13.2" />
   </ItemGroup>
 
   <ItemGroup>
