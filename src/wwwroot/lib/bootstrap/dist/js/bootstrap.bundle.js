@@ -3357,7 +3357,7 @@
       y: 0
     };
 
-    if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
+    if (isOffsetParentAnElement || !isFixed) {
       if (getNodeName(offsetParent) !== 'body' || // https://github.com/popperjs/popper-core/issues/1078
       isScrollParent(documentElement)) {
         scroll = getNodeScroll(offsetParent);
