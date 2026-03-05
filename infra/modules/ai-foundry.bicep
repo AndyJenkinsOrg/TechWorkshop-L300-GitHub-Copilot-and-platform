@@ -2,6 +2,7 @@ param location string
 param environment string
 param aiServicesName string = 'ais-zavasf-${environment}-${location}'
 param managedIdentityPrincipalId string
+param logAnalyticsWorkspaceId string
 
 // AI Services Multi-Service Resource (Foundry resource)
 resource aiServices 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = {
@@ -79,3 +80,36 @@ resource cognitiveServicesRoleAssignment 'Microsoft.Authorization/roleAssignment
 output aiServicesId string = aiServices.id
 output aiServicesName string = aiServices.name
 output aiServicesEndpoint string = aiServices.properties.endpoint
+
+// Diagnostic settings — send all logs and metrics to Log Analytics
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${aiServicesName}-diagnostics'
+  scope: aiServices
+  properties: {
+    workspaceId: logAnalyticsWorkspaceId
+    logs: [
+      {
+        category: 'Audit'
+        enabled: true
+      }
+      {
+        category: 'RequestResponse'
+        enabled: true
+      }
+      {
+        category: 'AzureOpenAIRequestUsage'
+        enabled: true
+      }
+      {
+        category: 'Trace'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+  }
+}
