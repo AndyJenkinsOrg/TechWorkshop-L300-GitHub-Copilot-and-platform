@@ -66,6 +66,16 @@ module appService 'modules/app-service.bicep' = {
   }
 }
 
+// Assign Cognitive Services OpenAI User role to managed identity on AI Services
+resource cognitiveServicesRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(aiFoundry.outputs.aiServicesId, managedIdentity.outputs.managedIdentityPrincipalId, 'CognitiveServicesOpenAIUser')
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd') // Cognitive Services OpenAI User
+    principalId: managedIdentity.outputs.managedIdentityPrincipalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 // Outputs
 output appServiceUrl string = appService.outputs.appServiceUrl
 output appServiceName string = appService.outputs.appServiceName
