@@ -17,10 +17,20 @@ public class ChatService
         var endpoint = configuration["AIServices:Endpoint"]
             ?? throw new InvalidOperationException("Missing required configuration 'AIServices:Endpoint'.");
         var deploymentName = configuration["AIServices:DeploymentName"] ?? "gpt-4o";
+        var managedIdentityClientId = configuration["AZURE_CLIENT_ID"];
+
+        // Use ManagedIdentityCredential with explicit client ID for user-assigned identity,
+        // fall back to DefaultAzureCredential for local development
+        Azure.Core.TokenCredential credential = !string.IsNullOrEmpty(managedIdentityClientId)
+            ? new ManagedIdentityCredential(managedIdentityClientId)
+            : new DefaultAzureCredential();
+
+        _logger.LogInformation("ChatService configured: endpoint={Endpoint}, deployment={Deployment}, hasManagedIdentity={HasMI}",
+            endpoint, deploymentName, !string.IsNullOrEmpty(managedIdentityClientId));
 
         var azureClient = new AzureOpenAIClient(
             new Uri(endpoint),
-            new DefaultAzureCredential());
+            credential);
 
         _chatClient = azureClient.GetChatClient(deploymentName);
     }
@@ -46,7 +56,7 @@ public class ChatService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error communicating with AI endpoint");
-            return "Sorry, I'm unable to respond right now. Please try again later.";
+            return $"Error: {ex.GetType().Name}: {ex.Message}";
         }
     }
 }
