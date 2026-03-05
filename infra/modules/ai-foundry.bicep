@@ -52,9 +52,9 @@ resource phi4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-1
   }
   properties: {
     model: {
-      format: 'OpenAI'
+      format: 'Microsoft'
       name: 'Phi-4'
-      version: '2'
+      version: '4'
     }
   }
   dependsOn: [
