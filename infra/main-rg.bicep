@@ -62,6 +62,7 @@ module appService 'modules/app-service.bicep' = {
     redisCachePort: redisCache.outputs.redisCacheSslPort
     managedIdentityClientId: managedIdentity.outputs.managedIdentityClientId
     managedIdentityId: managedIdentity.outputs.managedIdentityId
+    aiServicesEndpoint: aiFoundry.outputs.aiServicesEndpoint
   }
 }
 
