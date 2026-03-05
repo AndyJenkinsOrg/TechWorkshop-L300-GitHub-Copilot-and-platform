@@ -1,6 +1,7 @@
 param location string
 param environment string
 param aiServicesName string = 'ais-zavasf-${environment}-${location}'
+param managedIdentityPrincipalId string
 
 // AI Services Multi-Service Resource (Foundry resource)
 resource aiServices 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = {
@@ -62,6 +63,17 @@ resource phi4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-1
   dependsOn: [
     gpt4oDeployment
   ]
+}
+
+// Cognitive Services OpenAI User role scoped to this AI Services resource only
+resource cognitiveServicesRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(aiServices.id, managedIdentityPrincipalId, 'CognitiveServicesOpenAIUser')
+  scope: aiServices
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd')
+    principalId: managedIdentityPrincipalId
+    principalType: 'ServicePrincipal'
+  }
 }
 
 output aiServicesId string = aiServices.id
