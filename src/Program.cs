@@ -11,15 +11,36 @@ builder.Services.AddControllersWithViews();
 // Configure session state with Redis Cache in production, in-memory in development
 if (builder.Environment.IsProduction())
 {
-    var redisHost = builder.Configuration["RedisCache:Host"] ?? "localhost";
-    var redisPort = builder.Configuration["RedisCache:Port"] ?? "6380";
+    var redisHost = builder.Configuration["RedisCache:Host"];
+    var redisPort = builder.Configuration["RedisCache:Port"];
     var useSsl = builder.Configuration["RedisCache:Ssl"] == "true";
-    
-    var connectionString = $"{redisHost}:{redisPort},ssl={useSsl},abortConnect=false";
+    var redisPassword = builder.Configuration["RedisCache:Password"];
+
+    if (string.IsNullOrWhiteSpace(redisHost))
+    {
+        throw new InvalidOperationException("Missing required configuration value 'RedisCache:Host' for production Redis configuration.");
+    }
+
+    if (string.IsNullOrWhiteSpace(redisPort))
+    {
+        throw new InvalidOperationException("Missing required configuration value 'RedisCache:Port' for production Redis configuration.");
+    }
     
     builder.Services.AddStackExchangeRedisCache(options =>
     {
-        options.Configuration = connectionString;
+        var redisOptions = new StackExchange.Redis.ConfigurationOptions
+        {
+            EndPoints = { $"{redisHost}:{redisPort}" },
+            Ssl = useSsl,
+            AbortOnConnectFail = false,
+        };
+
+        if (!string.IsNullOrWhiteSpace(redisPassword))
+        {
+            redisOptions.Password = redisPassword;
+        }
+
+        options.ConfigurationOptions = redisOptions;
     });
 }
 else
@@ -40,7 +61,7 @@ builder.Services.AddSession(options =>
 
 // Register application services
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<ProductService>();
+builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CartService>();
 
 // Add health checks
