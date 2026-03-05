@@ -48,6 +48,7 @@ module aiFoundry 'modules/ai-foundry.bicep' = {
     location: location
     environment: environment
     managedIdentityPrincipalId: managedIdentity.outputs.managedIdentityPrincipalId
+    logAnalyticsWorkspaceId: monitoring.outputs.logAnalyticsWorkspaceId
   }
 }
 
