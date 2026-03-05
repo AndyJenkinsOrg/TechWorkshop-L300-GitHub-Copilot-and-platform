@@ -104,7 +104,7 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
         }
         {
           name: 'AIServices__DeploymentName'
-          value: 'Phi-4'
+          value: 'gpt-4o'
         }
       ]
       connectionStrings: []
