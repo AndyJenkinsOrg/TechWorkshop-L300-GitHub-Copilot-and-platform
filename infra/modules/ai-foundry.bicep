@@ -65,12 +65,12 @@ resource phi4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-1
   ]
 }
 
-// Cognitive Services OpenAI User role scoped to this AI Services resource only
+// Cognitive Services User role scoped to this AI Services resource only
 resource cognitiveServicesRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(aiServices.id, managedIdentityPrincipalId, 'CognitiveServicesOpenAIUser')
+  name: guid(aiServices.id, managedIdentityPrincipalId, 'CognitiveServicesUser')
   scope: aiServices
   properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd')
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'a97b65f3-24c7-4388-baec-2e87135dc908') // Cognitive Services User
     principalId: managedIdentityPrincipalId
     principalType: 'ServicePrincipal'
   }
